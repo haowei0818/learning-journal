@@ -24,7 +24,7 @@
 - [AI 問答功能完整記錄：技術選型、實作、除錯、自動化測試](2026-09-18-sprint3-rag-complete.md)
 - [.pdf / .docx 格式驗證、AI 幻覺問題、Prompt Engineering](2026-09-18-sprint3-pdf-docx-and-hallucination.md)
 
-### LLM 整合層工程化（T0～T9）
+### LLM 整合層工程化（T0～T9）✅ 已完成
 - [T0～T3：LLM Service、測試隔離、刪除不殘留向量、處理狀態](2026-11-08-llm-hardening-t0-t3.md)
 - [T4：暫時性錯誤自動重試、錯誤分類、統一例外](2026-11-11-t4-llm-retry.md)
 - [T5：手動重新處理 API、冪等、故意破壞驗證](2026-11-11-t5-reprocess.md)
