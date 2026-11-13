@@ -33,6 +33,9 @@
 - [T8：真實 Gemini 整合測試、預設跳過、用真實錯誤驗證 T4](2026-11-13-t8-integration-tests.md)
 - [T9：文件與履歷更新 + T0～T9 總結](2026-11-13-t9-docs-and-summary.md)
 
+### 求職
+- [履歷對應資料：AI 文件管理平台](resume-ai-document-platform.md)（履歷描述、佐證、面試故事、常見問題）
+
 ## 每篇筆記的結構
 
 1. 今天完成的事（含程式碼）
