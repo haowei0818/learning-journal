@@ -31,7 +31,7 @@
 - [T6：問答時 LLM 失敗回 503、不洩漏細節](2026-11-11-t6-ask-503.md)
 - [T7：LLM 呼叫可觀察、結構化 log、不記 prompt](2026-11-13-t7-llm-logging.md)
 - [T8：真實 Gemini 整合測試、預設跳過、用真實錯誤驗證 T4](2026-11-13-t8-integration-tests.md)
-- T9：文件與履歷更新 — 下一步
+- [T9：文件與履歷更新 + T0～T9 總結](2026-11-13-t9-docs-and-summary.md)
 
 ## 每篇筆記的結構
 
