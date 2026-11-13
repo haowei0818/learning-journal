@@ -127,3 +127,41 @@ with self.assertLogs(...) as logs:
 ## 四、下一步
 
 **T8 真實整合測試（預設不執行）**：1～2 個真的打 Gemini 的測試，確認 mock 和現實沒有脫節。預設跳過，設定環境變數才執行，而且單次不超過 5 次請求。
+
+---
+
+## 五、後續發現（2026-11-13，PR #10）：成功的 log 在實際執行時看不到
+
+用 curl 實際操作時發現：失敗的 `llm_call`（WARNING）會出現在 `runserver` 的輸出裡，**成功的（INFO）卻一筆都沒有**。
+
+### 原因
+- `documents` 這個 logger 沒有設定任何 handler（負責把 log 印出來的東西）
+- 找不到 handler 時，Python 有一個備用機制 **lastResort**（最後手段），但它**只印 WARNING 以上**
+- 所以 WARNING 看得到，INFO 被過濾掉
+
+### 為什麼 T7 的測試沒抓到
+`assertLogs` 會**暫時把 logger 的等級打開**來收集 log，所以測試環境裡永遠看得到 INFO。測試環境和真實環境不一樣。
+
+> 在駕訓班考場，教練幫你把後照鏡調好了，考試都過；真的上路才發現自己的車後照鏡是歪的。
+
+### 修正
+`settings.py` 加 `LOGGING`，`documents.*` 平常印 INFO、跑測試時只印 WARNING（避免洗版）。為此把 T1 移除的 `TESTING = 'test' in sys.argv` 加回來，並註解它的用途。
+
+### 測試：用子程序模擬真實環境
+```python
+result = subprocess.run(
+    [sys.executable, '-c',
+     'import logging, django; django.setup(); '
+     'logging.getLogger("documents.llm_service").info("probe-visible")'],
+    cwd=settings.BASE_DIR,
+    env={**os.environ, 'DJANGO_SETTINGS_MODULE': 'config.settings'},
+    capture_output=True, text=True,
+)
+self.assertIn('probe-visible', result.stderr)
+```
+子程序的指令裡沒有 `test`，所以載入的是真實執行時的設定。修正前 FAIL（stderr 是空的），修正後 OK。
+
+### 學到的事
+- **測試全綠只代表「在測試環境裡」沒問題**。有些東西（log 設定、環境變數、部署設定）測試環境和真實環境本來就不同，要另外驗證
+- **實際操作一次很有價值**：這個問題是 T0～T9 全部做完、curl 實際跑一次才發現的
+- 確認雜訊是不是自己造成的：用 `git stash` 暫時收起修改，比較修改前後的輸出（測試中的 4 行 WARNING 在修改前就存在）
